@@ -1,4 +1,4 @@
-import User from "../models/Users.js";
+import User from "../models/User.js";
 // استيراد كافة الدوال المسمّاة تحت اسم معين مثل userService
 import * as userService from "../services/userService.js";
 
