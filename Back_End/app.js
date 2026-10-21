@@ -1,17 +1,23 @@
-
+import authRouter from "./routers/authRoutes.js";
 import express from 'express';
 import cors from 'cors';
 import userRouter from './routers/userRouter.js';
-
 import {
     notFound,
     errorHandler
-} from './Middleware/Middleware.js';
+} from './middlewares/Middleware.js';
 
 const app = express();
 
 app.use(express.json());
 app.use(cors());
+
+
+app.get("/", (req, res) => {
+  res.send("Welcome to my Application");
+});
+
+app.use("/auth", authRouter);
 
 app.use("/users", userRouter);
 

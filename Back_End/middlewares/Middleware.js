@@ -1,4 +1,3 @@
-
 import mongoose from "mongoose";
 
 // Handle errors from asynchronous controllers

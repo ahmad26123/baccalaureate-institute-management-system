@@ -1,11 +1,68 @@
+// import { useState } from "react";
+// import { useNavigate } from "react-router-dom";
+import axios from "axios"; // أو يمكنك استخدام fetch
 import { useState } from "react";
+import { useNavigate } from "react-router";
 
 export default function Login() {
+  // 1. ربط المدخلات بحالات React State
+  const [identifier, setIdentifier] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleLogin = (e) => {
+  // 2. استدعاء useNavigate داخل المكون
+  const navigate = useNavigate();
+
+  // 3. دالة التوجيه بناءً على دور المستخدم (Role)
+  const handleLoginSuccess = (userData) => {
+    localStorage.setItem("token", userData.token);
+    localStorage.setItem("role", userData.user.role);
+
+    // التوجيه الديناميكي حسب الـ Role الوارد من قاعدة البيانات
+    switch (userData.user.role) {
+      case "admin":
+        navigate("/admin/dashboard");
+        break;
+      case "secretary":
+        navigate("/secretary/dashboard");
+        break;
+      case "teacher":
+        navigate("/teacher/dashboard");
+        break;
+      case "student":
+        navigate("/student/dashboard");
+        break;
+      case "parent":
+        navigate("/parent/dashboard");
+        break;
+      default:
+        navigate("/login");
+    }
+  };
+
+  // 4. معالجة إرسال نموذج تسجيل الدخول
+  const handleLogin = async (e) => {
     e.preventDefault();
-    setError("بيانات تسجيل الدخول غير صحيحة");
+    setError("");
+    setLoading(true);
+
+    try {
+      // قم باستبدال رابط الـ API برابط السيرفر لديك
+      const response = await axios.post("http://localhost:5000/api/auth/login", {
+        email: identifier, // أو username بحسب ما يتوقعه الباك إند
+        password: password,
+      });
+
+      // عند نجاح الطلب، يتم تنفيذ التوجيه والتخزين
+      handleLoginSuccess(response.data);
+    } catch (err) {
+      setError(
+        err.response?.data?.message || "بيانات تسجيل الدخول غير صحيحة"
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -19,20 +76,21 @@ export default function Login() {
 
         {error && (
           <div className="mb-4 bg-red-500/10 border border-red-500/40 text-red-400 px-4 py-2 rounded-md">
-
             {error}
-            
           </div>
         )}
 
         <form onSubmit={handleLogin} className="space-y-6">
-          {/* Username */}
+          {/* Username / Email */}
           <div>
             <label className="text-slate-200 mb-2 block">
               اسم المستخدم أو البريد الإلكتروني
             </label>
             <input
               type="text"
+              value={identifier}
+              onChange={(e) => setIdentifier(e.target.value)}
+              required
               className="w-full bg-slate-900 border border-slate-700 text-slate-100 px-4 py-3 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition"
             />
           </div>
@@ -42,6 +100,9 @@ export default function Login() {
             <label className="text-slate-200 mb-2 block">كلمة المرور</label>
             <input
               type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
               className="w-full bg-slate-900 border border-slate-700 text-slate-100 px-4 py-3 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition"
             />
           </div>
@@ -49,9 +110,10 @@ export default function Login() {
           {/* Login Button */}
           <button
             type="submit"
-            className="w-full bg-blue-600 hover:bg-blue-500 text-slate-50 font-semibold py-3 rounded-md transition"
+            disabled={loading}
+            className="w-full bg-blue-600 hover:bg-blue-500 text-slate-50 font-semibold py-3 rounded-md transition disabled:opacity-50"
           >
-            تسجيل الدخول
+            {loading ? "جاري تسجيل الدخول..." : "تسجيل الدخول"}
           </button>
 
           <div className="text-right">
