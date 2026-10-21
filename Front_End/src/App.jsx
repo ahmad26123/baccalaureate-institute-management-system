@@ -1,11 +1,11 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import ProtectedRoute from './components/ProtectedRoute';
-import Login from './pages/Login';
-import AdminDashboard from './pages/AdminDashboard';
-import SecretaryDashboard from './pages/SecretaryDashboard';
-import TeacherDashboard from './pages/TeacherDashboard';
-import StudentDashboard from './pages/StudentDashboard';
-import ParentDashboard from './pages/ParentDashboard';
+import ProtectedRoute from './components/ProtectedRoute.jsx';
+import Login from './pages/Login.jsx';
+import AdminDashboard from './pages/AdminDashboard.jsx';
+import SecretaryDashboard from './pages/SecretaryDashboard.jsx';
+import TeacherDashboard from './pages/TeacherDashboard.jsx';
+import StudentDashboard from './pages/StudentDashboard.jsx';
+import ParentDashboard from './pages/ParentDashboard.jsx';
 
 function App() {
   return (

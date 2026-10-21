@@ -1,25 +1,23 @@
-// import { useState } from "react";
-// import { useNavigate } from "react-router-dom";
-import axios from "axios"; // أو يمكنك استخدام fetch
 import { useState } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
+// import axios from "axios"; // سنتركه معلقاً لحين جاهزية الباك إند
 
 export default function Login() {
-  // 1. ربط المدخلات بحالات React State
+  // ربط المدخلات بحالات React State
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // 2. استدعاء useNavigate داخل المكون
+  // استدعاء useNavigate داخل المكون
   const navigate = useNavigate();
 
-  // 3. دالة التوجيه بناءً على دور المستخدم (Role)
+  // دالة التوجيه بناءً على دور المستخدم (Role)
   const handleLoginSuccess = (userData) => {
     localStorage.setItem("token", userData.token);
     localStorage.setItem("role", userData.user.role);
 
-    // التوجيه الديناميكي حسب الـ Role الوارد من قاعدة البيانات
+    // التوجيه الديناميكي حسب الـ Role الوارد
     switch (userData.user.role) {
       case "admin":
         navigate("/admin/dashboard");
@@ -41,28 +39,42 @@ export default function Login() {
     }
   };
 
-  // 4. معالجة إرسال نموذج تسجيل الدخول
+  // معالجة تسجيل الدخول (محاكاة مؤقتة للاختبار بدون باك إند)
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
     setLoading(true);
 
-    try {
-      // قم باستبدال رابط الـ API برابط السيرفر لديك
-      const response = await axios.post("http://localhost:5000/api/auth/login", {
-        email: identifier, // أو username بحسب ما يتوقعه الباك إند
-        password: password,
-      });
+    // محاكاة وقت استجابة السيرفر لمدة ثانية واحدة
+    setTimeout(() => {
+      let simulatedRole = "student"; // الدور الافتراضي
 
-      // عند نجاح الطلب، يتم تنفيذ التوجيه والتخزين
-      handleLoginSuccess(response.data);
-    } catch (err) {
-      setError(
-        err.response?.data?.message || "بيانات تسجيل الدخول غير صحيحة"
-      );
-    } finally {
+      // تحديد الدور بناءً على الكلمة الموجودة في اسم المستخدم للتجربة
+      const lowerInput = identifier.toLowerCase();
+      if (lowerInput.includes("admin")) {
+        simulatedRole = "admin";
+      } else if (lowerInput.includes("secretary")) {
+        simulatedRole = "secretary";
+      } else if (lowerInput.includes("teacher")) {
+        simulatedRole = "teacher";
+      } else if (lowerInput.includes("parent")) {
+        simulatedRole = "parent";
+      } else {
+        simulatedRole = "student";
+      }
+
+      // بناء استجابة وهمية مطابقة لما سيرسله الباك إند مستقبلاً
+      const mockResponse = {
+        token: "mock-jwt-token-123456789",
+        user: {
+          username: identifier,
+          role: simulatedRole,
+        },
+      };
+
+      handleLoginSuccess(mockResponse);
       setLoading(false);
-    }
+    }, 1000);
   };
 
   return (
