@@ -7,7 +7,7 @@ import AdminDashboard from './pages/AdminDashboard.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <AdminDashboard />
+    <App />
     
   </StrictMode>,
 )
