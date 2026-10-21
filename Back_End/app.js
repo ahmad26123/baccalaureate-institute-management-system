@@ -1,34 +1,24 @@
-<<<<<<< HEAD
-import express from "express";
-import cors from "cors";
-
 import authRouter from "./routers/authRoutes.js";
-import userRouter from "./routers/userRoutes.js";
-=======
-
 import express from 'express';
 import cors from 'cors';
 import userRouter from './routers/userRouter.js';
->>>>>>> 941a982fa0e00a5ea4d70398cdec3d85d7e0a9fe
-
 import {
     notFound,
     errorHandler
-} from './Middleware/Middleware.js';
+} from './middlewares/Middleware.js';
 
 const app = express();
 
 app.use(express.json());
 app.use(cors());
 
-<<<<<<< HEAD
+
 app.get("/", (req, res) => {
   res.send("Welcome to my Application");
 });
 
 app.use("/auth", authRouter);
-=======
->>>>>>> 941a982fa0e00a5ea4d70398cdec3d85d7e0a9fe
+
 app.use("/users", userRouter);
 
 // // Temporary routes for testing error handling
